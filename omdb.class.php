@@ -91,7 +91,7 @@ class OMDb {
         //Checks if the request did succed
         if($info['http_code'] !== 200) {
             throw new Exception(
-                'Request faild. Reflectoreturned HTTP CODE: '
+                'Request faild. HTTP CODE: '
                 . $info['http_code']
             );
         }
