@@ -15,15 +15,40 @@ A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
     $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
 
 Parameters
-| Parameter |     Valid Options      | Default value |       Description       |
-| --------- | ---------------------- | ------------- | ----------------------- |
-| type      | movie, series, episode | NULL          | Type of result          |
-| y         |                        | NULL          | Year of release         |
-| plot      | short, full            | short         | Plot-length             |
-| tomatoes  | TRUE, FALSE            | FALSE         | Include Rotten Tomatoes |
+<table>
+    <tr>
+        <th>Parameter</th>
+        <th>Valid Options</th>
+        <th>Default value</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Type</td>
+        <td>movie, series, episode</td>
+        <td>NULL</td>
+        <td>Type of result</td>
+    </tr>
+    <tr>
+        <td>y</td>
+        <td></td>
+        <td>NULL</td>
+        <td>Year of release </td>
+    </tr>
+    <tr>
+        <td>plot</td>
+        <td>short, full</td>
+        <td>short</td>
+        <td>Plot-length</td>
+    </tr>
+    <tr>
+        <td>tomatoes</td>
+        <td>TRUE, FALSE</td>
+        <td>FALSE</td>
+        <td>Include Rotten Tomatoes</td>
+    </tr>
+</table>
 
-
-Timeout = timeoutvalue for cURL
+Timeout = timeout value for cURL
 
 Date_format = http://php.net/manual/function.date.php
 and NULL for UNIX time
