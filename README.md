@@ -1,5 +1,5 @@
 # OMDb-PHP-API
-A wrapper for OMDb API that gets movie info by IMDb id or title and returns data from IMDb and Rotten Tomatoes.
+A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 
 ### How to use
     //Init OMDb and include data from Rotten Tomatoes
@@ -16,7 +16,7 @@ A wrapper for OMDb API that gets movie info by IMDb id or title and returns data
 
 Parameters
 | Parameter |     Valid Options      | Default value |       Description       |
-|-----------|------------------------|---------------|-------------------------|
+| --------- | ---------------------- | ------------- | ----------------------- |
 | type      | movie, series, episode | NULL          | Type of result          |
 | y         |                        | NULL          | Year of release         |
 | plot      | short, full            | short         | Plot-length             |
