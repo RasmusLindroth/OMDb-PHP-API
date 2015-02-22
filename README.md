@@ -14,7 +14,7 @@ A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 ### Parameters for the constructor
     $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
 
-Parameters
+Params = 
 <table>
     <tr>
         <th>Parameter</th>
@@ -23,7 +23,7 @@ Parameters
         <th>Description</th>
     </tr>
     <tr>
-        <td>Type</td>
+        <td>type</td>
         <td>movie, series, episode</td>
         <td>NULL</td>
         <td>Type of result</td>
