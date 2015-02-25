@@ -82,6 +82,7 @@ You can check for API errors if the value of the key 'Response' is TRUE or if
 the key 'Error' exists in the result.
 
 Example:
+    
     $omdb->get_by_title( 'gasdgasdgadgasdgasdg' );
 
     //Returns
