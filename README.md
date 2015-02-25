@@ -1,5 +1,5 @@
 # OMDb-PHP-API
-A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
+A wrapper for the OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 
 ### How to use
 ```php

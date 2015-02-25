@@ -6,7 +6,7 @@ try {
     $omdb = new OMDb( ['tomatoes' => TRUE] );
 
     //Get by title
-    $movie = $omdb->get_by_title('Pulp Fictionasdasd');
+    $movie = $omdb->get_by_title('Pulp Fiction');
 
     //Get by IMDb id
     $movie = $omdb->get_by_id('tt0057012');
