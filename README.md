@@ -2,24 +2,24 @@
 A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 
 ### How to use
-    //Init OMDb and include data from Rotten Tomatoes
+    //Init OMDb
     $omdb = new OMDb();
 
-    //Set parameters
+    //Set parameters, include data from Rotten Tomatoes and show full plot
     $omdb->setParams( ['tomatoes' => TRUE, 'plot' => 'full'] );
 
-    //Only set one parameter
-    $omdb->setParam('y', 2015);
+    //Only set one parameter, the movie has to be from 2015
+    $omdb->setParam( 'y', 2015 );
 
     //Get by title
-    $movie = $omdb->get_by_title('Pulp Fiction');
+    $movie = $omdb->get_by_title( 'Pulp Fiction' );
 
     //Get by IMDb id
-    $movie = $omdb->get_by_id('tt0057012');
+    $movie = $omdb->get_by_id( 'tt0057012' );
 
     //Search for (multiple) movies
     //ignores the params plot and tomatoes
-    $movie = $omdb->search('James Bond');
+    $movie = $omdb->search( 'James Bond' );
 
 ### Parameters for the constructor (can be left empty)
     $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
