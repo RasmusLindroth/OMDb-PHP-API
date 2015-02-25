@@ -3,7 +3,13 @@ A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 
 ### How to use
     //Init OMDb and include data from Rotten Tomatoes
-    $omdb = new OMDb( ['tomatoes' => TRUE] );
+    $omdb = new OMDb();
+
+    //Set parameters
+    $omdb->setParams( ['tomatoes' => TRUE, 'plot' => 'full'] );
+
+    //Only set one parameter
+    $omdb->setParam('y', 2015);
 
     //Get by title
     $movie = $omdb->get_by_title('Pulp Fiction');
@@ -11,10 +17,18 @@ A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
     //Get by IMDb id
     $movie = $omdb->get_by_id('tt0057012');
 
-### Parameters for the constructor
+    //Search for (multiple) movies
+    //ignores the params plot and tomatoes
+    $movie = $omdb->search('James Bond');
+
+### Parameters for the constructor (can be left empty)
     $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
 
-Params = 
+params: has to be an array, see API parameters for parameter reference
+timeout: cURL/request timeout in seconds
+date_format: http://php.net/manual/function.date.php and NULL for UNIX time
+
+### API parameters
 <table>
     <tr>
         <th>Parameter</th>
@@ -38,22 +52,45 @@ Params =
         <td>plot</td>
         <td>short, full</td>
         <td>short</td>
-        <td>Plot-length</td>
+        <td>Plot-length, ignored when you use the search-method</td>
     </tr>
     <tr>
         <td>tomatoes</td>
         <td>TRUE, FALSE</td>
         <td>FALSE</td>
-        <td>Include Rotten Tomatoes</td>
+        <td>Include Rotten Tomatoes, ignored when you use the search-method</td>
     </tr>
 </table>
 
-Timeout = timeout value for cURL
+### Methods
+    //Returns array(Title, Year, imdbID, Type, ...)
+    $omdb->get_by_title( 'title' );
+    $omdb->get_by_id( 'tt[0-9]' );
 
-Date_format = http://php.net/manual/function.date.php
-and NULL for UNIX time
+    //Returns array(
+    //      Search => array(Title, Year, imdbID, Type), array(...)
+    //              )
+    $omdb->search( 'Search term' );
+
+### Errors
+This class throws exceptions if you for instance sends a string to a function
+that's expecting an array. If the API runs in to some error I have choosen not
+to throw an exception. You will have to implent it yourself.
+
+You can check for API errors if the value of the key 'Response' is TRUE or if
+the key 'Error' exists in the result.
+
+Example:
+    $omdb->get_by_title( 'gasdgasdgadgasdgasdg' );
+
+    //Returns
+    array(
+        'Response' => FALSE
+        'Error' => 'Movie not found!'
+    )
 
 ### Output example
+
     array (size=34)
       'Title' => string 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb'
       'Year' => string '1964'
@@ -109,8 +146,9 @@ and NULL for UNIX time
       'Website' => null
       'Response' => boolean true
 
-OMDb APIs webpage and a thanks to Brian Fritz
+Thanks to Brian Fritz, the author of OMDb APIs
+
+The API webpage
 http://www.omdbapi.com/
 
-Made by:
-Rasmus Lindroth
+This PHP wrapper is made by Rasmus Lindroth

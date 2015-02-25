@@ -21,38 +21,70 @@ class OMDb {
     private $params = [
         //movie, series, episode or NULL
         'type' => NULL,
+
         //Year of release or NULL
         'y' => NULL,
+
         //short, full
         'plot' => 'short',
-        //json
+
+        //json, if you edit
+        //this one you will
+        //have to rewrite the
+        //parse method
         'r' => 'json',
-        //true, false
+
+        //Rotten Tomatoes
+        //TRUE, FALSE
         'tomatoes' => FALSE,
-        //api version
+
+        //api version. Don't edit this one
+        //if you don't know what you're doing
         'v' => 1
     ];
 
-    //$params = param => value
+    //$params = array(param => value)
     //$timeout = request timeout in seconds
     //$date = see this page for format http://php.net/manual/function.date.php,
     //can be NULL and returns UNIX-time
     public function __construct($params = [], $timeout = 5, $date_format = 'Y-m-d') {
+
+        //Set the API parameters
+        $this->setParams($params);
+
+        //Set the cURL timeout
+        $this->timeout = $timeout;
+
+        //Set the date format
+        $this->date_format = $date_format;
+    }
+
+    //Set the parameters for the API request
+    //$params = array(param => value)
+    public function setParams($params) {
         //Make sure $params is an array
         if(is_array($params) !== TRUE) {
             throw new Exception('$params has to be an array.');
         }
 
         foreach($params as $param => $value) {
+            //lowered key
+            $k = strtolower($param);
+
             //Check if parameter is valid
             //and make an edit to it
-            if(isset($this->params[$param])) {
-                $this->params[$param] = $value;
+            if(isset($this->params[$k])) {
+                $this->params[$k] = $value;
+            }else {
+                throw new Exception($param . ' isn\'t a valid parameter.');
             }
         }
+    }
 
-        $this->timeout = $timeout;
-        $this->date_format = $date_format;
+    //Set only one parameter
+    public function setParam($param, $value) {
+        //Sends the parameter as an array to the method setParams
+        $this->setParams( [ $param => $value ] );
     }
 
     //Create URL, including id or title params
@@ -60,7 +92,7 @@ class OMDb {
     //$value = tt[0-9] or title
     private function createURL($type, $value) {
         $params = $this->params;
-        //Adds title or id search
+        //Adds title, id or search
         $params[$type] = $value;
 
         $tmp_params = [];
@@ -102,18 +134,14 @@ class OMDb {
     private function get_data($url) {
         $request = $this->request($url);
         //Parse the request
-        $parsed = $this->parse_JSON($request);
-
-        //Checks for errors from the API
-        if(isset($parsed['Response'], $parsed['Error']) && $parsed['Response'] === FALSE) {
-            throw new Exception('API error: ' . $parsed['Error']);
-        }
+        $parsed = $this->parse_result($request);
 
         return $parsed;
     }
 
     //Get by IMDb id
     //$id = tt[0-9]
+    //returns an array
     public function get_by_id($id) {
         //Checks if the IMDb id is valud
         if($this->valid_imdb_id($id) === FALSE) {
@@ -127,9 +155,23 @@ class OMDb {
     }
 
     //Get by title
+    //returns an array
     public function get_by_title($title) {
         //Gets the URL
         $url = $this->createURL('t', $title);
+
+        //Gets the data and returns it
+        return $this->get_data($url);
+    }
+
+    //This function search for multiple movies
+    //ignores the plot and tomatoes parameters
+    //returns array(
+    //      Search => array(Title, Year, imdbID, Type), array(...)
+    //              )
+    public function search($s) {
+        //Gets the URL
+        $url = $this->createURL('s', $s);
 
         //Gets the data and returns it
         return $this->get_data($url);
@@ -187,12 +229,13 @@ class OMDb {
         }
     }
 
-    //Parses the JSON object
+    //Parses all the result
+    //with the connected method
     //and returns an array
     //with the data
-    private function parse_JSON($json) {
+    private function parse_result($object) {
         //Rules for how to parse the data
-        //date,runtime,many,int,float,bool and NULL
+        //date,runtime,many,int,float,bool,search and NULL
         $rules = [
             'Title' => NULL,
             'Year' => NULL,
@@ -228,17 +271,18 @@ class OMDb {
             'Production' => NULL,
             'Website' => NULL,
             'Response' => 'bool',
+            'Search' => 'search',
             'Error' => NULL,
         ];
         //Object to array
-        $json = (array)$json;
+        $unParsed = (array)$object;
         //Holds the parsed data
         $data = [];
 
         //Calls the appropriate method
         //based on the rule connected
         //with the key
-        foreach($json as $key => $value) {
+        foreach($unParsed as $key => $value) {
             if($value === 'N/A') {
                 $data[$key] = NULL;
             }else {
@@ -261,6 +305,14 @@ class OMDb {
                         break;
                     case 'bool':
                         $v = $this->parse_bool($value);
+                        break;
+                    case 'search':
+                        //There is multiple titles, parses
+                        //each of them and adds them to an array
+                        $v = [];
+                        foreach($value as $arr) {
+                            $v[] = $this->parse_result($arr);
+                        }
                         break;
                     default:
                         $v = $value;
