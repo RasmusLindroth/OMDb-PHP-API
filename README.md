@@ -24,9 +24,10 @@ A wrapper for OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 ### Parameters for the constructor (can be left empty)
     $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
 
-params: has to be an array, see API parameters for parameter reference
-timeout: cURL/request timeout in seconds
-date_format: http://php.net/manual/function.date.php and NULL for UNIX time
+<b>params</b>: has to be an array, see API parameters for parameter reference<br>
+<b>timeout</b>: cURL/request timeout in seconds<br>
+<b>date_format</b>: http://php.net/manual/function.date.php and NULL for UNIX time
+
 
 ### API parameters
 <table>
@@ -146,8 +147,7 @@ Example:
       'Website' => null
       'Response' => boolean true
 
-Thanks to Brian Fritz, the author of OMDb APIs
-
+Thanks to Brian Fritz, the author of OMDb APIs<br>
 The API webpage
 http://www.omdbapi.com/
 
