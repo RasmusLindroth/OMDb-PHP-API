@@ -66,14 +66,14 @@ class OMDb {
         if(is_array($params) !== TRUE) {
             throw new Exception('$params has to be an array.');
         }
-
+	$validParams = array_keys($this->params);
         foreach($params as $param => $value) {
             //lowered key
             $k = strtolower($param);
 
             //Check if parameter is valid
             //and make an edit to it
-            if(isset($this->params[$k])) {
+            if(in_array($k, $validParams)) {
                 $this->params[$k] = $value;
             }else {
                 throw new Exception($param . ' isn\'t a valid parameter.');
@@ -123,7 +123,7 @@ class OMDb {
         //Checks if the request did succed
         if($info['http_code'] !== 200) {
             throw new Exception(
-                'Request faild. HTTP CODE: '
+                'Request failed. HTTP CODE: '
                 . $info['http_code']
             );
         }
