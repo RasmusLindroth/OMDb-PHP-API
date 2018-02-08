@@ -3,7 +3,7 @@ include 'omdb.class.php';
 
 try {
     //Init OMDb and include data from Rotten Tomatoes
-    $omdb = new OMDb( ['tomatoes' => TRUE] );
+    $omdb = new OMDb( ['tomatoes' => TRUE, 'apikey' => '00000000'] );
 
     //Get by title
     $movie = $omdb->get_by_title('Pulp Fiction');
