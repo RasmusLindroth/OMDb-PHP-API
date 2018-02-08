@@ -2,12 +2,13 @@
 A wrapper for the OMDb API that gets movie info from IMDb and Rotten Tomatoes.
 
 ### How to use
+Do not forget to replace your apikey that you must get from [the OMDb website](http://www.omdbapi.com/apikey.aspx).
 ```php
 //Init OMDb
 $omdb = new OMDb();
 
 //Set parameters, include data from Rotten Tomatoes and show full plot
-$omdb->setParams( ['tomatoes' => TRUE, 'plot' => 'full'] );
+$omdb->setParams( ['tomatoes' => TRUE, 'plot' => 'full', 'apikey' => '00000000'] );
 
 //Only set one parameter, the movie has to be from 2015
 $omdb->setParam( 'y', 2015 );
@@ -23,9 +24,9 @@ $movie = $omdb->get_by_id( 'tt0057012' );
 $movie = $omdb->search( 'James Bond' );
 ```
 
-### Parameters for the constructor (can be left empty)
+### Parameters for the constructor (can be left empty, except for your apikey)
 ```php
-$omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
+$omdb = new OMDb($params = ['apikey' => '00000000'], $timeout = 5, $date_format = 'Y-m-d');
 ```
 
 <b>params</b>: has to be an array, see API parameters for parameter reference<br>
@@ -40,6 +41,12 @@ $omdb = new OMDb($params = [], $timeout = 5, $date_format = 'Y-m-d');
         <th>Valid Options</th>
         <th>Default value</th>
         <th>Description</th>
+    </tr>
+    <tr>
+        <td>apikey</td>
+        <td></td>
+        <td>00000000</td>
+        <td>API key as received from <a href="http://www.omdbapi.com/apikey.aspx">the OMDb website</a>.</td>
     </tr>
     <tr>
         <td>type</td>
@@ -154,6 +161,21 @@ array (size=34)
   'Production' => string 'Sony Pictures'
   'Website' => null
   'Response' => boolean true
+  'Ratings' =>
+    array(3)
+      0 =>
+        array(2)
+          Source => string "Internet Movie Database"
+          value => string "8.9/10"
+      1 =>
+        array(2)
+          Source => string "Rotten Tomatoes"
+          value => string "94%"
+      2 =>
+        array(2)
+          Source => string "Metacritic"
+          value => string "94/100"
+  'tomatoURL' => string 'http://www.rottentomatoes.com/m/dr_strangelove/'
 ```
 
 Thanks to Brian Fritz, the author of OMDb APIs<br>

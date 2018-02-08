@@ -38,6 +38,9 @@ class OMDb {
         //TRUE, FALSE
         'tomatoes' => FALSE,
 
+        //API Key, you must pass this one otherwise the requests will fail
+        'apikey' => '',
+        
         //api version. Don't edit this one
         //if you don't know what you're doing
         'v' => 1
@@ -66,7 +69,7 @@ class OMDb {
         if(is_array($params) !== TRUE) {
             throw new Exception('$params has to be an array.');
         }
-	$validParams = array_keys($this->params);
+        $validParams = array_keys($this->params);
         foreach($params as $param => $value) {
             //lowered key
             $k = strtolower($param);
@@ -193,6 +196,19 @@ class OMDb {
         }
     }
 
+    //Parses array
+    private function parse_array($value) {
+        $result = [];
+        foreach ($value as $item) {
+            $parsedItem = [];
+			foreach ($item as $key=>$value) {
+				$parsedItem[$key] = $value;
+			}
+			$result[] = $parsedItem;
+        }
+        return $result;
+    }
+
     //Parses date to
     //to the specified format
     private function parse_date($date) {
@@ -251,6 +267,7 @@ class OMDb {
             'Country' => 'many',
             'Awards' => NULL,
             'Poster' => NULL,
+            'Ratings' => 'array',
             'Metascore' => 'int',
             'imdbRating' => 'float',
             'imdbVotes' => 'int',
@@ -266,6 +283,7 @@ class OMDb {
             'tomatoUserMeter' => 'int',
             'tomatoUserRating' => 'float',
             'tomatoUserReviews' => 'int',
+            'tomatoURL' => NULL,
             'DVD' => NULL,
             'BoxOffice' => NULL,
             'Production' => NULL,
@@ -273,6 +291,8 @@ class OMDb {
             'Response' => 'bool',
             'Search' => 'search',
             'Error' => NULL,
+            'totalResults' => 'int',
+            'totalSeasons' => 'int',
         ];
         //Object to array
         $unParsed = (array)$object;
@@ -305,6 +325,9 @@ class OMDb {
                         break;
                     case 'bool':
                         $v = $this->parse_bool($value);
+                        break;
+                    case 'array':
+                        $v = $this->parse_array($value);
                         break;
                     case 'search':
                         //There is multiple titles, parses
