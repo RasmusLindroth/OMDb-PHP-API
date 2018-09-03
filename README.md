@@ -95,7 +95,7 @@ $omdb->get_by_id( 'tt[0-9]', [, $season = NULL, $episode = NULL] );
 //Returns array(
 //      'Search' => array(Title, Year, imdbID, Type), array(...)
 //             )
-$omdb->search( 'Search term', [, $page = NULL );
+$omdb->search( 'Search term', [, $page = NULL] );
 ```
 
 ### Errors
