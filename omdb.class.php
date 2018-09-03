@@ -90,13 +90,20 @@ class OMDb {
         $this->setParams( [ $param => $value ] );
     }
 
-    //Create URL, including id or title params
-    //$type = i or t
-    //$value = tt[0-9] or title
-    private function createURL($type, $value) {
+    //Unset a parameter
+    public function unsetParam($param) {
+        $this->setParams( [ $param => NULL ] );
+    }
+
+    //Create URL, including extra params like id or title params
+    // array( array(type, value) )
+    private function createURL($p) {
         $params = $this->params;
-        //Adds title, id or search
-        $params[$type] = $value;
+
+        //Add all params from $p
+        foreach($p as $value) {
+            $params[$value[0]] = $value[1];
+        }
 
         $tmp_params = [];
         foreach($params as $param => $value) {
@@ -145,13 +152,26 @@ class OMDb {
     //Get by IMDb id
     //$id = tt[0-9]
     //returns an array
-    public function get_by_id($id) {
+    public function get_by_id($id, $season = NULL, $episode = NULL) {
         //Checks if the IMDb id is valud
         if($this->valid_imdb_id($id) === FALSE) {
             throw new Exception('The IMDb id is invalid.');
         }
+
+        $params = [
+            ['i', $id]
+        ];
+
+        if($season !== NULL) {
+            $params[] = ['Season', $season];
+
+            if($episode !== NULL) {
+                $params[] = ['Episode', $episode];
+            }
+        }
+
         //Gets the URL
-        $url = $this->createURL('i', $id);
+        $url = $this->createURL($params);
 
         //Gets the data and returns it
         return $this->get_data($url);
@@ -160,8 +180,13 @@ class OMDb {
     //Get by title
     //returns an array
     public function get_by_title($title) {
+
+        $params = [
+            ['t', $title]
+        ];
+
         //Gets the URL
-        $url = $this->createURL('t', $title);
+        $url = $this->createURL($params);
 
         //Gets the data and returns it
         return $this->get_data($url);
@@ -172,9 +197,17 @@ class OMDb {
     //returns array(
     //      Search => array(Title, Year, imdbID, Type), array(...)
     //              )
-    public function search($s) {
+    public function search($s, $page = NULL) {
+        $params = [
+            ['s', $s]
+        ];
+
+        if($page !== NULL) {
+            $params[] = ['page', $page];
+        }
+
         //Gets the URL
-        $url = $this->createURL('s', $s);
+        $url = $this->createURL($params);
 
         //Gets the data and returns it
         return $this->get_data($url);
@@ -251,7 +284,7 @@ class OMDb {
     //with the data
     private function parse_result($object) {
         //Rules for how to parse the data
-        //date,runtime,many,int,float,bool,search and NULL
+        //array,date,runtime,many,int,float,bool,search and NULL
         $rules = [
             'Title' => NULL,
             'Year' => NULL,
@@ -293,6 +326,10 @@ class OMDb {
             'Error' => NULL,
             'totalResults' => 'int',
             'totalSeasons' => 'int',
+            'Episodes' => 'array',
+            'Season' => 'int',
+            'Episode' => 'int',
+            'seriesID' => NULL
         ];
         //Object to array
         $unParsed = (array)$object;

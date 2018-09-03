@@ -13,15 +13,27 @@ $omdb->setParams( ['tomatoes' => TRUE, 'plot' => 'full', 'apikey' => '00000000']
 //Only set one parameter, the movie has to be from 2015
 $omdb->setParam( 'y', 2015 );
 
+//Remove one parameter
+$omdb->unsetParam('y');
+
 //Get by title
 $movie = $omdb->get_by_title( 'Pulp Fiction' );
 
 //Get by IMDb id
 $movie = $omdb->get_by_id( 'tt0057012' );
 
+//Get all episodes in season 1, (also works for get_by_title)
+$movie = $omdb->get_by_id('tt2085059', 1 );
+
+//Get episode 2 for season 1, (also works for get_by_title)
+$movie = $omdb->get_by_id('tt2085059', 1, 2 );
+
 //Search for (multiple) movies
 //ignores the params plot and tomatoes
 $movie = $omdb->search( 'James Bond' );
+
+//Search with pagination
+$movie = $omdb->search( 'Alfred', 2 );
 ```
 
 ### Parameters for the constructor (can be left empty, except for your apikey)
@@ -77,13 +89,13 @@ $omdb = new OMDb($params = ['apikey' => '00000000'], $timeout = 5, $date_format 
 ### Methods
 ```php
 //Returns array(Title, Year, imdbID, Type, ...)
-$omdb->get_by_title( 'title' );
-$omdb->get_by_id( 'tt[0-9]' );
+$omdb->get_by_title( 'title', [, $season = NULL, $episode = NULL] );
+$omdb->get_by_id( 'tt[0-9]', [, $season = NULL, $episode = NULL] );
 
 //Returns array(
 //      'Search' => array(Title, Year, imdbID, Type), array(...)
 //             )
-$omdb->search( 'Search term' );
+$omdb->search( 'Search term', [, $page = NULL );
 ```
 
 ### Errors
